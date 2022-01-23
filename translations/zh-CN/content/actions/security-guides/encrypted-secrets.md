@@ -16,6 +16,7 @@ versions:
 
 {% data reusables.actions.enterprise-beta %}
 {% data reusables.actions.enterprise-github-hosted-runners %}
+{% data reusables.actions.ae-beta %}
 
 ## 关于加密密码
 
@@ -79,6 +80,8 @@ versions:
 
 {% data reusables.github-actions.permissions-statement-secrets-repository %}
 
+{% include tool-switcher %}
+
 {% webui %}
 
 {% data reusables.repositories.navigate-to-repo %}
@@ -119,6 +122,8 @@ gh secret set <em>secret-name</em> < secret.txt
 
 {% data reusables.github-actions.permissions-statement-secrets-environment %}
 
+{% include tool-switcher %}
+
 {% webui %}
 
 {% data reusables.repositories.navigate-to-repo %}
@@ -155,6 +160,8 @@ gh secret list --env <em>environment-name</em>
 在组织中创建密码时，可以使用策略来限制可以访问该密码的仓库。 例如，您可以将访问权限授予所有仓库，也可以限制仅私有仓库或指定的仓库列表拥有访问权限。
 
 {% data reusables.github-actions.permissions-statement-secrets-organization %}
+
+{% include tool-switcher %}
 
 {% webui %}
 

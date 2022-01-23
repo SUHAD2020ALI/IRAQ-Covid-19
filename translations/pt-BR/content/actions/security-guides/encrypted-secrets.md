@@ -16,6 +16,7 @@ versions:
 
 {% data reusables.actions.enterprise-beta %}
 {% data reusables.actions.enterprise-github-hosted-runners %}
+{% data reusables.actions.ae-beta %}
 
 ## Sobre os segredos encriptados
 
@@ -79,6 +80,8 @@ Ao gerar credenciais, recomendamos que você conceda as permissões mínimas pos
 
 {% data reusables.github-actions.permissions-statement-secrets-repository %}
 
+{% include tool-switcher %}
+
 {% webui %}
 
 {% data reusables.repositories.navigate-to-repo %}
@@ -119,6 +122,8 @@ Para listar todos os segredos para o repositório, use o subcomando da lista `gh
 
 {% data reusables.github-actions.permissions-statement-secrets-environment %}
 
+{% include tool-switcher %}
+
 {% webui %}
 
 {% data reusables.repositories.navigate-to-repo %}
@@ -155,6 +160,8 @@ gh secret list --env <em>environment-name</em>
 Ao criar um segredo em uma organização, você pode usar uma política para limitar quais repositórios podem acessar esse segredo. Por exemplo, você pode conceder acesso a todos os repositórios ou limitar o acesso a apenas repositórios privados ou a uma lista específica de repositórios.
 
 {% data reusables.github-actions.permissions-statement-secrets-organization %}
+
+{% include tool-switcher %}
 
 {% webui %}
 
@@ -337,22 +344,22 @@ Os segredos são limitados a 64 kB. Para usar segredos maiores que 64 kB, você 
 
 {% raw %}
   ```yaml
-  name: Workflows with large secrets
+  nome: Fluxos de trabalho com grandes segredos
 
-  on: push
+  : empurrar
 
-  jobs:
-    my-job:
-      name: My Job
+  empregos:
+    meu trabalho:
+      nome: My Job
       runs-on: ubuntu-latest
       steps:
-        - uses: actions/checkout@v2
-        - name: Decrypt large secret
-          run: ./.github/scripts/decrypt_secret.sh
+        - usa: actions/checkout@v2
+        - nome: Descriptografar grandes segredos
+          executar: ./.github/scripts/decrypt_secret.sh
           env:
             LARGE_SECRET_PASSPHRASE: ${{ secrets.LARGE_SECRET_PASSPHRASE }}
-        # This command is just an example to show your secret being printed
-        # Ensure you remove any print statements of your secrets. O GitHub
+        # Este comando é apenas um exemplo para mostrar seu segredo sendo impresso
+        # Certifique-se de remover quaisquer declarações impressas de seus segredos. O GitHub
         # não oculta segredos que usam essa alternativa.
         - name: Test printing your secret (Remove this step in production)
           run: cat $HOME/secrets/my_secret.json

@@ -18,6 +18,7 @@ miniTocMaxHeadingLevel: 3
 
 {% data reusables.actions.enterprise-beta %}
 {% data reusables.actions.enterprise-github-hosted-runners %}
+{% data reusables.actions.ae-beta %}
 
 ## About contexts
 
@@ -124,14 +125,12 @@ miniTocMaxHeadingLevel: 3
 
 `runner` 上下文包含正在执行当前作业的运行器相关信息。
 
-| 属性名称                | 类型    | 描述                                                                                                                                                              |
-| ------------------- | ----- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 属性名称                | 类型    | 描述                                                                                                                                                                                                                                              |
+| ------------------- | ----- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `runner.name`       | `字符串` | {% data reusables.actions.runner-name-description %}
-| `runner.os`         | `字符串` | {% data reusables.actions.runner-os-description %} |{% if actions-runner-arch-envvars %}
-| `runner.arch`       | `字符串` | {% data reusables.actions.runner-arch-description %} 
-{% endif %}
+| `runner.os`         | `字符串` | {% data reusables.actions.runner-os-description %}
 | `runner.temp`       | `字符串` | {% data reusables.actions.runner-temp-directory-description %}
-| `runner.tool_cache` | `字符串` | {% ifversion ghae %}{% data reusables.actions.self-hosted-runners-software %} {% else %} {% data reusables.actions.runner-tool-cache-description %} {% endif %}
+| `runner.tool_cache` | `字符串` | {% ifversion ghae %}有关如何确定 {% data variables.actions.hosted_runner %} 已安装所需软件的说明，请参阅“[创建自定义映像](/actions/using-github-hosted-runners/creating-custom-images)”。 {% else %} {% data reusables.actions.runner-tool-cache-description %} {% endif %}
 
 ### `needs` 上下文
 
@@ -208,7 +207,7 @@ jobs:
 下表列出了工作流程中每一个上下文和特殊函数可以使用的地方。 除非下面列出，否则可以在任何地方使用函数。 |{% ifversion fpt or ghes > 3.3 or ghae-issue-4757 or ghec %}
 | 路径                         | 上下文                        | 特殊函数                       |
 | -------------------------- | -------------------------- | -------------------------- |
-| <code>concurrency</code>  | <code>github, inputs</code>  |                            |
+| <code>concurrency</code>  | <code>github</code>  |                            |
 | <code>env</code>  | <code>github, secrets, inputs</code>  |                            |
 | <code>jobs.&lt;job_id&gt;.concurrency</code>  | <code>github, needs, strategy, matrix, inputs</code>  |                            |
 | <code>jobs.&lt;job_id&gt;.container</code>  | <code>github, needs, strategy, matrix, inputs</code>  |                            |

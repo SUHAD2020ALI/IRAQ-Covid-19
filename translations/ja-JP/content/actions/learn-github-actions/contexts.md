@@ -18,6 +18,7 @@ miniTocMaxHeadingLevel: 3
 
 {% data reusables.actions.enterprise-beta %}
 {% data reusables.actions.enterprise-github-hosted-runners %}
+{% data reusables.actions.ae-beta %}
 
 ## About contexts
 
@@ -124,14 +125,12 @@ miniTocMaxHeadingLevel: 3
 
 `runner`コンテキストには、現在のジョブを実行しているランナーに関する情報が含まれています。
 
-| プロパティ名              | 種類       | 説明                                                                                                                                                              |
-| ------------------- | -------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| プロパティ名              | 種類       | 説明                                                                                                                                                                                                                                                                           |
+| ------------------- | -------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `runner.name`       | `string` | {% data reusables.actions.runner-name-description %}
-| `runner.os`         | `string` | {% data reusables.actions.runner-os-description %} |{% if actions-runner-arch-envvars %}
-| `runner.arch`       | `string` | {% data reusables.actions.runner-arch-description %} 
-{% endif %}
+| `runner.os`         | `string` | {% data reusables.actions.runner-os-description %}
 | `runner.temp`       | `string` | {% data reusables.actions.runner-temp-directory-description %}
-| `runner.tool_cache` | `string` | {% ifversion ghae %}{% data reusables.actions.self-hosted-runners-software %} {% else %} {% data reusables.actions.runner-tool-cache-description %} {% endif %}
+| `runner.tool_cache` | `string` | {% ifversion ghae %}{% data variables.actions.hosted_runner %} に必要なソフトウェアがインストールされていることを確認する方法については、「[カスタムイメージの作成](/actions/using-github-hosted-runners/creating-custom-images)」を参照してください。 {% else %} {% data reusables.actions.runner-tool-cache-description %} {% endif %}
 
 ### `needs`コンテキスト
 
@@ -208,7 +207,7 @@ In addition, some functions may only be used in certain places. For example, the
 The following table indicates where each context and special function can be used within a workflow. Unless listed below, a function can be used anywhere. |{% ifversion fpt or ghes > 3.3 or ghae-issue-4757 or ghec %}
 | パス                         | コンテキスト                     | Special functions          |
 | -------------------------- | -------------------------- | -------------------------- |
-| <code>concurrency</code>  | <code>github, inputs</code>  |                            |
+| <code>concurrency</code>  | <code>github</code>  |                            |
 | <code>env</code>  | <code>github, secrets, inputs</code>  |                            |
 | <code>jobs.&lt;job_id&gt;.concurrency</code>  | <code>github, needs, strategy, matrix, inputs</code>  |                            |
 | <code>jobs.&lt;job_id&gt;.container</code>  | <code>github, needs, strategy, matrix, inputs</code>  |                            |
