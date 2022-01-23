@@ -1,6 +1,6 @@
 ---
 title: Autenticación
-intro: Puedes configurar cómo los usuarios acceden a tu empersa.
+intro: You can configure how users access your enterprise.
 redirect_from:
   - /enterprise/admin/authentication
 versions:

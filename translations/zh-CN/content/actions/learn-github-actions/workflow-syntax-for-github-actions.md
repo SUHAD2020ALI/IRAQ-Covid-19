@@ -16,6 +16,7 @@ versions:
 
 {% data reusables.actions.enterprise-beta %}
 {% data reusables.actions.enterprise-github-hosted-runners %}
+{% data reusables.actions.ae-beta %}
 
 ## 关于工作流程的 YAML 语法
 
@@ -61,7 +62,7 @@ on:
 on:
   push:
     # Sequence of patterns matched against refs/heads
-    branches:
+    branches:    
       # Push events on main branch
       - main
       # Push events to branches matching refs/heads/mona/octocat
@@ -69,7 +70,7 @@ on:
       # Push events to branches matching refs/heads/releases/10
       - 'releases/**'
     # Sequence of patterns matched against refs/tags
-    tags:
+    tags:        
       - v1             # Push events to v1 tag
       - v1.*           # Push events to v1.0, v1.1, and v1.9 tags
 ```
@@ -109,7 +110,7 @@ on:
 ```yaml
 on:
   push:
-    branches:
+    branches:    
       - 'releases/**'
       - '!releases/**-alpha'
 ```
@@ -186,7 +187,7 @@ on:
 {% ifversion fpt or ghes > 3.3 or ghae-issue-4757 or ghec %}
 ## `on.workflow_call.inputs`
 
-When using the `workflow_call` keyword, you can optionally specify inputs that are passed to the called workflow from the caller workflow. For more information about the `workflow_call` keyword, see "[Events that trigger workflows](/actions/learn-github-actions/events-that-trigger-workflows#workflow-reuse-events)."
+When using the `workflow_call` keyword, you can optionally specify inputs that are passed to the called workflow from the caller workflow. Inputs for reusable workflows are specified with the same format as action inputs. For more information about inputs, see "[Metadata syntax for GitHub Actions](/actions/creating-actions/metadata-syntax-for-github-actions#inputs)." For more information about the `workflow_call` keyword, see "[Events that trigger workflows](/actions/learn-github-actions/events-that-trigger-workflows#workflow-reuse-events)."
 
 In addition to the standard input parameters that are available, `on.workflow_call.inputs` requires a `type` parameter. For more information, see [`on.workflow_call.inputs.<input_id>.type`](#onworkflow_callinputsinput_idtype).
 
@@ -225,31 +226,6 @@ For more information, see "[Reusing workflows](/actions/learn-github-actions/reu
 
 Required if input is defined for the `on.workflow_call` keyword. The value of this parameter is a string specifying the data type of the input. This must be one of: `boolean`, `number`, or `string`.
 
-## `on.workflow_call.outputs`
-
-A map of outputs for a called workflow. Called workflow outputs are available to all downstream jobs in the caller workflow. Each output has an identifier, an optional `description,` and a `value.` The `value` must be set to the value of an output from a job within the called workflow.
-
-In the example below, two outputs are defined for this reusable workflow: `workflow_output1` and `workflow_output2`. These are mapped to outputs called `job_output1` and `job_output2`, both from a job called `my_job`.
-
-### 示例
-
-{% raw %}
-```yaml
-on:
-  workflow_call:
-    # Map the workflow outputs to job outputs
-    outputs:
-      workflow_output1:
-        description: "The first job output"
-        value: ${{ jobs.my_job.outputs.job_output1 }}
-      workflow_output2:
-        description: "The second job output"
-        value: ${{ jobs.my_job.outputs.job_output2 }}
-```
-{% endraw %}
-
-For information on how to reference a job output, see [`jobs.<job_id>.outputs`](#jobsjob_idoutputs). For more information, see "[Reusing workflows](/actions/learn-github-actions/reusing-workflows)."
-
 ## `on.workflow_call.secrets`
 
 A map of the secrets that can be used in the called workflow.
@@ -273,7 +249,7 @@ jobs:
   pass-secret-to-action:
     runs-on: ubuntu-latest
 
-    steps:
+    steps:  
       - name: Pass the received secret to an action
         uses: ./.github/actions/my-action@v1
         with:
@@ -292,50 +268,30 @@ A boolean specifying whether the secret must be supplied.
 
 ## `on.workflow_dispatch.inputs`
 
-When using the `workflow_dispatch` event, you can optionally specify inputs that are passed to the workflow.
+When using the `workflow_dispatch` event, you can optionally specify inputs that are passed to the workflow. 工作流程调度输入的格式与操作输入相同。 有关格式的更多信息，请参阅“[GitHub Actions 的元数据语法](/actions/creating-actions/metadata-syntax-for-github-actions#inputs)”。
 
-触发的工作流程接收 `github.event.input` 上下文中的输入。 更多信息请参阅“[上下文](/actions/learn-github-actions/contexts#github-context)”。
-
-### 示例
 ```yaml
-on:
+on: 
   workflow_dispatch:
     inputs:
       logLevel:
-        description: 'Log level'
+        description: 'Log level'     
         required: true
-        default: 'warning' {% ifversion ghec or ghes > 3.3 or ghae-issue-5511 %}
-        type: choice
-        options:
-        - info
-        - warning
-        - debug {% endif %}
+        default: 'warning'
       tags:
         description: 'Test scenario tags'
-        required: false {% ifversion ghec or ghes > 3.3 or ghae-issue-5511 %}
-        type: boolean
-      environment:
-        description: 'Environment to run tests against'
-        type: environment
-        required: true {% endif %}
-
-jobs:
-  print-tag:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Print the input tag to STDOUT
-        run: echo {% raw %} The tag is ${{ github.event.inputs.tag }} {% endraw %}
+        required: false
 ```
 
+触发的工作流程接收 `github.event.input` 上下文中的输入。 更多信息请参阅“[上下文](/actions/learn-github-actions/contexts#github-context)”。
 
 ## `on.schedule`
 
 {% data reusables.repositories.actions-scheduled-workflow-example %}
 
-For more information about cron syntax, see "[Events that trigger workflows](/actions/automating-your-workflow-with-github-actions/events-that-trigger-workflows#scheduled-events)."
+有关计划任务语法的更多信息请参阅“[触发工作流程的事件](/actions/automating-your-workflow-with-github-actions/events-that-trigger-workflows#scheduled-events)”。
 
-{% ifversion fpt or ghes > 3.1 or ghae or ghec %}
+{% ifversion fpt or ghes > 3.1 or ghae-next or ghec %}
 ## `权限`
 
 您可以修改授予 `GITHUB_TOKEN` 的默认权限，根据需要添加或删除访问权限，以便只授予所需的最低访问权限。 更多信息请参阅“[工作流程中的身份验证](/actions/reference/authentication-in-a-workflow#permissions-for-the-github_token)。
@@ -395,7 +351,7 @@ defaults:
     working-directory: scripts
 ```
 
-{% ifversion fpt or ghae or ghes > 3.1 or ghec %}
+{% ifversion fpt or ghae-next or ghes > 3.1 or ghec %}
 ## `concurrency`
 
 Concurrency 确保只有使用相同并发组的单一作业或工作流程才会同时运行。 并发组可以是任何字符串或表达式。 The expression can only use the [`github` context](/actions/learn-github-actions/contexts#github-context). For more information about expressions, see "[Expressions](/actions/learn-github-actions/expressions)."
@@ -411,7 +367,7 @@ Concurrency 确保只有使用相同并发组的单一作业或工作流程才�
 
 每个作业在 `runs-on` 指定的运行器环境中运行。
 
-在工作流程的使用限制之内可运行无限数量的作业。 For more information, see {% ifversion fpt or ghec or ghes %}"[Usage limits and billing](/actions/reference/usage-limits-billing-and-administration)" for {% data variables.product.prodname_dotcom %}-hosted runners and {% endif %}"[About self-hosted runners](/actions/hosting-your-own-runners/about-self-hosted-runners/#usage-limits){% ifversion fpt or ghec or ghes %}" for self-hosted runner usage limits.{% elsif ghae %}."{% endif %}
+在工作流程的使用限制之内可运行无限数量的作业。 更多信息请参阅“[使用限制和计费](/actions/reference/usage-limits-billing-and-administration)”（对于 {% data variables.product.prodname_dotcom %} 托管的运行器）和“[关于自托管运行器](/actions/hosting-your-own-runners/about-self-hosted-runners/#usage-limits)”（对于自托管运行器使用限制）。
 
 If you need to find the unique identifier of a job running in a workflow run, you can use the {% ifversion fpt or ghec %}{% data variables.product.prodname_dotcom %}{% else %}{% data variables.product.product_name %}{% endif %} API. 更多信息请参阅“[工作流程作业](/rest/reference/actions#workflow-jobs)”。
 
@@ -474,9 +430,22 @@ jobs:
 
 ## `jobs.<job_id>.runs-on`
 
-**必填**。 要运行作业的机器类型。 {% ifversion fpt or ghec %}The machine can be either a {% data variables.product.prodname_dotcom %}-hosted runner or a self-hosted runner.{% endif %} You can provide `runs-on` as a single string or as an array of strings. If you specify an array of strings, your workflow will run on a self-hosted runner whose labels match all of the specified `runs-on` values, if available. If you would like to run your workflow on multiple machines, use [`jobs.<job_id>.strategy`](/actions/learn-github-actions/workflow-syntax-for-github-actions#jobsjob_idstrategy).
+**必填**。 要运行作业的机器类型。 机器可以是 {% data variables.product.prodname_dotcom %} 托管的运行器或自托管的运行器。
 
-{% ifversion fpt or ghec or ghes %}
+{% ifversion ghae %}
+### {% data variables.actions.hosted_runner %}
+
+如果使用 {% data variables.actions.hosted_runner %}，每个作业将在 `runs-on` 指定的虚拟环境的新实例中运行。
+
+#### 示例
+
+```yaml
+runs-on: [AE-runner-for-CI]
+```
+
+更多信息请参阅“[关于 {% data variables.actions.hosted_runner %}](/actions/using-github-hosted-runners/about-ae-hosted-runners)”。
+
+{% else %}
 {% data reusables.actions.enterprise-github-hosted-runners %}
 
 ### {% data variables.product.prodname_dotcom %} 托管的运行器
@@ -496,9 +465,7 @@ runs-on: ubuntu-latest
 更多信息请参阅“[{% data variables.product.prodname_dotcom %} 托管的运行器的虚拟环境](/github/automating-your-workflow-with-github-actions/virtual-environments-for-github-hosted-runners)”。
 {% endif %}
 
-{% ifversion fpt or ghec or ghes %}
 ### 自托管运行器
-{% endif %}
 
 {% data reusables.actions.ae-self-hosted-runners-notice %}
 
@@ -512,7 +479,7 @@ runs-on: [self-hosted, linux]
 
 更多信息请参阅“[关于自托管的运行器](/github/automating-your-workflow-with-github-actions/about-self-hosted-runners)”和“[在工作流程中使用自托管的运行器](/github/automating-your-workflow-with-github-actions/using-self-hosted-runners-in-a-workflow)”。
 
-{% ifversion fpt or ghes > 3.1 or ghae or ghec %}
+{% ifversion fpt or ghes > 3.1 or ghae-next or ghec %}
 ## `jobs.<job_id>.permissions`
 
 您可以修改授予 `GITHUB_TOKEN` 的默认权限，根据需要添加或删除访问权限，以便只授予所需的最低访问权限。 更多信息请参阅“[工作流程中的身份验证](/actions/reference/authentication-in-a-workflow#permissions-for-the-github_token)。
@@ -574,7 +541,7 @@ environment:
 {% endraw %}
 {% endif %}
 
-{% ifversion fpt or ghae or ghes > 3.1 or ghec %}
+{% ifversion fpt or ghae-next or ghes > 3.1 or ghec %}
 ## `jobs.<job_id>.concurrency`
 
 {% note %}
@@ -673,7 +640,7 @@ jobs:
 
 作业包含一系列任务，称为 `steps`。 步骤可以运行命令、运行设置任务，或者运行您的仓库、公共仓库中的操作或 Docker 注册表中发布的操作。 并非所有步骤都会运行操作，但所有操作都会作为步骤运行。 每个步骤在运行器环境中以其自己的进程运行，且可以访问工作区和文件系统。 因为步骤以自己的进程运行，所以步骤之间不会保留环境变量的更改。 {% data variables.product.prodname_dotcom %} 提供内置的步骤来设置和完成作业。
 
-在工作流程的使用限制之内可运行无限数量的步骤。 For more information, see {% ifversion fpt or ghec or ghes %}"[Usage limits and billing](/actions/reference/usage-limits-billing-and-administration)" for {% data variables.product.prodname_dotcom %}-hosted runners and {% endif %}"[About self-hosted runners](/actions/hosting-your-own-runners/about-self-hosted-runners/#usage-limits){% ifversion fpt or ghec or ghes %}" for self-hosted runner usage limits.{% elsif ghae %}."{% endif %}
+在工作流程的使用限制之内可运行无限数量的步骤。 更多信息请参阅“[使用限制和计费](/actions/reference/usage-limits-billing-and-administration)”（对于 {% data variables.product.prodname_dotcom %} 托管的运行器）和“[关于自托管运行器](/actions/hosting-your-own-runners/about-self-hosted-runners/#usage-limits)”（对于自托管运行器使用限制）。
 
 ### 示例
 
@@ -987,9 +954,8 @@ steps:
 
 此示例中使用的命令 `perl` 必须安装在运行器上。
 
-{% ifversion ghae %}
-{% data reusables.actions.self-hosted-runners-software %}
-{% elsif fpt or ghec %}
+{% ifversion ghae %}有关如何确定 {% data variables.actions.hosted_runner %} 已安装所需软件的说明，请参阅“[创建自定义映像](/actions/using-github-hosted-runners/creating-custom-images)”。
+{% else %}
 有关 GitHub 托管运行器中所包含软件的信息，请参阅“[GitHub 托管运行器的规格](/actions/reference/specifications-for-github-hosted-runners#supported-software)”。
 {% endif %}
 
@@ -1028,7 +994,7 @@ jobs:
         with:
           first_name: Mona
           middle_name: The
-          last_name: Octocat
+          last_name: Octocat      
 ```
 
 ## `jobs.<job_id>.steps[*].with.args`
@@ -1103,11 +1069,11 @@ steps:
 
 在 {% data variables.product.prodname_dotcom %} 自动取消运行之前可让作业运行的最大分钟数。 默认值：360
 
-如果超时超过运行器的作业执行时限，作业将在达到执行时限时取消。 For more information about job execution time limits, see {% ifversion fpt or ghec or ghes %}"[Usage limits and billing](/actions/reference/usage-limits-billing-and-administration#usage-limits)" for {% data variables.product.prodname_dotcom %}-hosted runners and {% endif %}"[About self-hosted runners](/actions/hosting-your-own-runners/about-self-hosted-runners/#usage-limits){% ifversion fpt or ghec or ghes %}" for self-hosted runner usage limits.{% elsif ghae %}."{% endif %}
+如果超时超过运行器的作业执行时限，作业将在达到执行时限时取消。 有关作业执行时限的更多信息，请参阅“[使用限制、计费和管理](/actions/reference/usage-limits-billing-and-administration#usage-limits)”。
 
 ## `jobs.<job_id>.strategy`
 
-A strategy creates a build matrix for your jobs. 您可以定义要在其中运行每项作业的不同变种。
+策略创建作业的构建矩阵。 您可以定义要在其中运行每项作业的不同变种。
 
 ## `jobs.<job_id>.strategy.matrix`
 
@@ -1121,7 +1087,7 @@ A strategy creates a build matrix for your jobs. 您可以定义要在其中运�
 
 ### 示例：运行多个版本的 Node.js
 
-您可以提供配置选项阵列来指定矩阵。 For example, if the runner supports Node.js versions 10, 12, and 14, you could specify an array of those versions in the `matrix`.
+您可以提供配置选项阵列来指定矩阵。 例如，如果运行器支持 Node.js 版本 10、12 和 14，则您可以在 `matrix` 中指定这些版本的阵列。
 
 此示例通过设置三个 Node.js 版本阵列的 `node` 键创建三个作业的矩阵。 为使用矩阵，示例将 `matrix.node` 上下文属性设置为 `setup-node` 操作的输入参数 `node-version`。 因此，将有三个作业运行，每个使用不同的 Node.js 版本。
 
@@ -1164,14 +1130,13 @@ steps:
 ```
 {% endraw %}
 
-{% ifversion ghae %}
-For more information about the configuration of self-hosted runners, see "[About self-hosted runners](/actions/hosting-your-own-runners/about-self-hosted-runners)."
+{% ifversion ghae %}要查找 {% data variables.actions.hosted_runner %} 支持的配置选项，请参阅“[软件规格](/actions/using-github-hosted-runners/about-ae-hosted-runners#software-specifications)”。
 {% else %}要查找 {% data variables.product.prodname_dotcom %} 托管的运行器支持的配置选项，请参阅“[{% data variables.product.prodname_dotcom %} 托管的运行器的虚拟环境](/actions/automating-your-workflow-with-github-actions/virtual-environments-for-github-hosted-runners)”。
 {% endif %}
 
 ### 示例：在组合中包含附加值
 
-您可以将额外的配置选项添加到已经存在的构建矩阵作业中。 For example, if you want to use a specific version of `npm` when the job that uses `windows-latest` and version 8 of `node` runs, you can use `include` to specify that additional option.
+您可以将额外的配置选项添加到已经存在的构建矩阵作业中。 例如，如果要在作业使用 `windows-latest` 和 `node` 的版本 8 运行时使用 `npm` 的特定版本，您可以使用 `include` 指定该附加选项。
 
 {% raw %}
 ```yaml
@@ -1191,7 +1156,7 @@ strategy:
 
 ### 示例：包括新组合
 
-您可以使用 `include` 将新作业添加到构建矩阵中。 任何不匹配包含配置都会添加到矩阵中。 For example, if you want to use `node` version 14 to build on multiple operating systems, but wanted one extra experimental job using node version 15 on Ubuntu, you can use `include` to specify that additional job.
+您可以使用 `include` 将新作业添加到构建矩阵中。 任何不匹配包含配置都会添加到矩阵中。 例如，如果您想要使用 `node` 版本 14 在多个操作系统上构建，但在 Ubuntu 上需要一个使用节点版本 15 的额外实验性作业，则可使用 `include` 指定该额外作业。
 
 {% raw %}
 ```yaml
@@ -1256,7 +1221,7 @@ strategy:
 
 ### 示例：防止特定失败的矩阵作业无法运行工作流程
 
-您可以允许作业矩阵中的特定任务失败，但工作流程运行不失败。 For example, if you wanted to only allow an experimental job with `node` set to `15` to fail without failing the workflow run.
+您可以允许作业矩阵中的特定任务失败，但工作流程运行不失败。 例如， 只允许 `node` 设置为 `15` 的实验性作业失败，而不允许工作流程运行失败。
 
 {% raw %}
 ```yaml
@@ -1508,7 +1473,7 @@ jobs:
   call-workflow:
     uses: octo-org/example-repo/.github/workflows/called-workflow.yml@main
     secrets:
-      access-token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+      access-token: ${{ secrets.PERSONAL_ACCESS_TOKEN }} 
 ```
 {% endraw %}
 
