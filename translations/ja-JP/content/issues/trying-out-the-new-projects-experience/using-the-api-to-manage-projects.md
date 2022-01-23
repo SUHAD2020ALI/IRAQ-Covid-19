@@ -17,6 +17,8 @@ topics:
 
 ## 認証
 
+{% include tool-switcher %}
+
 {% curl %}
 
 以下のすべてのcURLの例で、`TOKEN`を`read:org`スコープ（クエリの場合）もしくは`write:org`スコープ（クエリ及びミューテーションの場合）を持つトークンで置き換えてください。 The token can be a personal access token for a user or an installation access token for a {% data variables.product.prodname_github_app %}. For more information about creating a personal access token, see "[Creating a personal access token](/github/authenticating-to-github/keeping-your-account-and-data-secure/creating-a-personal-access-token)." For more information about creating an installation access token for a {% data variables.product.prodname_github_app %}, see "[Authenticating with {% data variables.product.prodname_github_apps %}](/developers/apps/building-github-apps/authenticating-with-github-apps#authenticating-as-a-github-app)."
@@ -50,19 +52,21 @@ gh api graphql -f query='
   }' -f organization=$my_org -F number=$my_num
 ```
 
-For more information, see "[Forming calls with GraphQL]({% ifversion ghec%}/free-pro-team@latest{% endif %}/graphql/guides/forming-calls-with-graphql#working-with-variables)."
+詳しい情報については「[GraphQLでの呼び出しの形成]({% ifversion ghec%}/free-pro-team@latest{% endif %}/graphql/guides/forming-calls-with-graphql#working-with-variables)」を参照してください。
 
 {% endcli %}
 
 ## プロジェクトに関する情報を見つける
 
-プロジェクトに関するデータを取得するには、クエリを使ってください。 For more information, see "[About queries]({% ifversion ghec%}/free-pro-team@latest{% endif %}/graphql/guides/forming-calls-with-graphql#about-queries)."
+プロジェクトに関するデータを取得するには、クエリを使ってください。 詳しい情報については「[クエリについて]({% ifversion ghec%}/free-pro-team@latest{% endif %}/graphql/guides/forming-calls-with-graphql#about-queries)」を参照してください。
 
 ### Finding the node ID of an organization project
 
 APIを通じてプロジェクトを更新するには、プロジェクトのノードIDを知る必要があります。
 
 You can find the node ID of an organization project if you know the organization name and project number. `ORGANIZATION`をOrganization名で置き換えてください。 たとえば`octo-org`というようにします。 Replace `NUMBER` with the project number. プロジェクト番号を知るには、プロジェクトのURLを見てください。 たとえば`https://github.com/orgs/octo-org/projects/5`ではプロジェクト番号は5です。
+
+{% include tool-switcher %}
 
 {% curl %}
 ```shell
@@ -87,6 +91,8 @@ gh api graphql -f query='
 {% endcli %}
 
 Organization中のすべてのプロジェクトのノードIDを見つけることもできます。 以下の例は、Orgazation中の最初の20個のプロジェクトのノードIDとタイトルを返します。 `ORGANIZATION`をOrganization名で置き換えてください。 たとえば`octo-org`というようにします。
+
+{% include tool-switcher %}
 
 {% curl %}
 ```shell
@@ -117,7 +123,9 @@ gh api graphql -f query='
 
 APIを通じてプロジェクトを更新するには、プロジェクトのノードIDを知る必要があります。
 
-You can find the node ID of a user project if you know the project number. Replace `USER` with your user name. `octocat`などです。 `NUMBER`はプロジェクト番号で置き換えてください。 プロジェクト番号を知るには、プロジェクトのURLを見てください。 For example, `https://github.com/users/octocat/projects/5` has a project number of 5.
+You can find the node ID of a user project if you know the project number. Replace `USER` with your user name. `octocat`などです。 `NUMBER`はプロジェクト番号で置き換えてください。 プロジェクト番号を知るには、プロジェクトのURLを見てください。 たとえば`https://github.com/users/octocat/projects/5`ではプロジェクト番号は5です。
+
+{% include tool-switcher %}
 
 {% curl %}
 ```shell
@@ -142,6 +150,8 @@ gh api graphql -f query='
 {% endcli %}
 
 You can also find the node ID for all of your projects. The following example will return the node ID and title of your first 20 projects. Replace `USER` with your username. `octocat`などです。
+
+{% include tool-switcher %}
 
 {% curl %}
 ```shell
@@ -173,6 +183,8 @@ gh api graphql -f query='
 フィールドの値を更新するには、フィールドのノードIDを知る必要があります。 Additionally, you will need to know the ID of the options for single select fields and the ID of the iterations for iteration fields.
 
 以下の例は、プロジェクト内の最初の20個のフィールドのID、名前、設定を返します。 `PROJECT_ID`をプロジェクトのノードIDで置き換えてください。
+
+{% include tool-switcher %}
 
 {% curl %}
 ```shell
@@ -245,6 +257,8 @@ APIでクエリを行い、プロジェクト中のアイテムに関する情�
 
 以下の例は、プロジェクト中の最初の20個のアイテムのタイトルとIDを返します。 それぞれのアイテムについては、プロジェクト中の最初の8個のフィールドの値と名前も返します。 アイテムがIssueあるいはPull Requestの場合、アサインされた最初の10人のログインも返します。 `PROJECT_ID`をプロジェクトのノードIDで置き換えてください。
 
+{% include tool-switcher %}
+
 {% curl %}
 ```shell
 curl --request POST \
@@ -296,7 +310,7 @@ gh api graphql -f query='
 ```
 {% endcli %}
 
-プロジェクトは、ユーザが表示権限を持たないアイテムを含んでいることがあります。 In this case, the response will include a redacted item.
+プロジェクトは、ユーザが表示権限を持たないアイテムを含んでいることがあります。 この場合、レスポンスには削減済みのアイテムが含まれます。
 
 ```shell
 {
@@ -320,6 +334,8 @@ gh api graphql -f query='
 ### プロジェクトへのアイテムの追加
 
 以下の例は、プロジェクトにIssueあるいはPull Requestを追加します。 `PROJECT_ID`をプロジェクトのノードIDで置き換えてください。 `CONTENT_ID`を、追加したいIssueあるいはPull RequestのノードIDで置き換えてください。
+
+{% include tool-switcher %}
 
 {% curl %}
 ```shell
@@ -357,11 +373,13 @@ gh api graphql -f query='
 }
 ```
 
-If you try to add an item that already exists, the existing item ID is returned instead.
+すでに存在しているアイテムを追加しようとすると、代わりに既存のアイテムのIDが返されます。
 
 ### Updating a custom text, number, or date field
 
 The following example will update the value of a date field for an item. `PROJECT_ID`をプロジェクトのノードIDで置き換えてください。 `ITEM_ID`を、更新したいアイテムのノードIDで置き換えてください。 `FIELD_ID`を、更新したいフィールドのIDで置き換えてください。
+
+{% include tool-switcher %}
 
 {% curl %}
 ```shell
@@ -407,6 +425,8 @@ The following example will update the value of a single select field for an item
 - `FIELD_ID` -  Replace this with the ID of the single select field that you want to update.
 - `OPTION_ID` - Replace this with the ID of the desired single select option.
 
+{% include tool-switcher %}
+
 {% curl %}
 ```shell
 curl --request POST \
@@ -445,6 +465,8 @@ The following example will update the value of an iteration field for an item.
 - `FIELD_ID` -  Replace this with the ID of the iteration field that you want to update.
 - `ITERATION_ID` - Replace this with the ID of the desired iteration. This can be either an active iteration (from the `iterations` array) or a completed iteration (from the `completed_iterations` array).
 
+{% include tool-switcher %}
+
 {% curl %}
 ```shell
 curl --request POST \
@@ -477,6 +499,8 @@ gh api graphql -f query='
 ### プロジェクトからのアイテムの削除
 
 以下の例は、プロジェクトからアイテムを削除します。 `PROJECT_ID`をプロジェクトのノードIDで置き換えてください。 `ITEM_ID`を、削除したいアイテムのノードIDで置き換えてください。
+
+{% include tool-switcher %}
 
 {% curl %}
 ```shell
